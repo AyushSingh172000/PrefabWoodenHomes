@@ -1,0 +1,18 @@
+# ============================================================
+# Prefab Wooden Homes — Robots.txt
+# https://prefabwoodenhomes.com/robots.txt
+# ============================================================
+
+User-agent: *
+Allow: /
+
+# Block sensitive directories
+Disallow: /config/
+Disallow: /includes/
+Disallow: /database/
+Disallow: /logs/
+Disallow: /admin/
+Disallow: /pages/submit-enquiry.php
+
+# Sitemap location
+Sitemap: https://prefabwoodenhomes.com/sitemap.xml

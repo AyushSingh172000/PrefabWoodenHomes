@@ -1,0 +1,90 @@
+# ============================================================
+# Prefab Wooden Homes — Apache Configuration
+# Place in: C:\xampp\htdocs\prefabwoodenhomes\.htaccess
+# ============================================================
+
+# Enable Rewrite Engine
+RewriteEngine On
+# RewriteBase / (omitted to let Apache dynamically resolve root domain vs subfolders)
+
+# ---- Force HTTPS (uncomment on live server) ----
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ---- Force www (uncomment on live server, pick one) ----
+# RewriteCond %{HTTP_HOST} ^prefabwoodenhomes\.com$ [NC]
+# RewriteRule ^(.*)$ https://www.prefabwoodenhomes.com/$1 [L,R=301]
+
+# ---- Clean URLs (remove .php extension) ----
+# Check if the request is not a real file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# /about → /pages/about.php
+RewriteRule ^(about|construction|projects|process|why-wooden|faq|contact)$ pages/$1.php [L,QSA]
+
+# /submit-enquiry → /pages/submit-enquiry.php
+RewriteRule ^submit-enquiry$ pages/submit-enquiry.php [L,QSA]
+
+# ---- Block directory listing ----
+Options -Indexes
+
+# ---- Block access to sensitive files ----
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak|config|env)$">
+    Require all denied
+</FilesMatch>
+
+# ---- Block access to config & includes directories ----
+RewriteRule ^config/ - [F,L]
+RewriteRule ^includes/ - [F,L]
+RewriteRule ^database/ - [F,L]
+RewriteRule ^logs/ - [F,L]
+
+# ---- Security Headers ----
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+    # Uncomment on live server with HTTPS:
+    # Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.google.com https://maps.google.com;"
+</IfModule>
+
+# ---- Enable Gzip Compression ----
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml application/xml
+</IfModule>
+
+# ---- Browser Caching ----
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType application/x-font-woff2 "access plus 1 month"
+    ExpiresByType font/woff2 "access plus 1 month"
+</IfModule>
+
+# ---- Custom Error Pages ----
+ErrorDocument 404 /pages/404.php
+ErrorDocument 500 /pages/500.php
+
+# ---- Block common exploit patterns ----
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+RewriteRule .* - [F,L]
+
+# ---- Prevent image hotlinking (uncomment on live) ----
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?prefabwoodenhomes\.com [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,NC]
