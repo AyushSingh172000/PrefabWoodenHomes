@@ -2,8 +2,8 @@
 /**
  * Global Site Settings, Branding & Contact Info - Prefab Wooden Homes
  */
-$pageTitle = 'Site Settings & Branding';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 $error = '';
 
@@ -28,6 +28,8 @@ try {
                 $filename = 'logo_' . time() . '.' . $ext;
                 if (move_uploaded_file($logoFile['tmp_name'], $brandingDir . $filename)) {
                     $settings['site_logo'] = asset('images/branding/' . $filename);
+                } else {
+                    $error = 'Failed to save uploaded logo to server. Please check folder permissions.';
                 }
             } else {
                 $error = 'Invalid logo format. Allowed: PNG, JPG, WebP, SVG.';
@@ -43,6 +45,8 @@ try {
                 $filename = 'favicon_' . time() . '.' . $ext;
                 if (move_uploaded_file($favFile['tmp_name'], $brandingDir . $filename)) {
                     $settings['site_favicon'] = asset('images/branding/' . $filename);
+                } else {
+                    $error = 'Failed to save uploaded favicon to server. Please check folder permissions.';
                 }
             } else {
                 $error = 'Invalid favicon format. Allowed: PNG, ICO, WebP.';
@@ -50,10 +54,19 @@ try {
         }
 
         if (empty($error)) {
-            $updateStmt = $db->prepare("INSERT INTO site_settings (setting_key, setting_value) VALUES (:k, :v) ON DUPLICATE KEY UPDATE setting_value = :v");
+            $checkStmt = $db->prepare("SELECT id FROM site_settings WHERE setting_key = :k LIMIT 1");
+            $updateStmt = $db->prepare("UPDATE site_settings SET setting_value = :v WHERE setting_key = :k");
+            $insertStmt = $db->prepare("INSERT INTO site_settings (setting_key, setting_value, label, setting_group) VALUES (:k, :v, :lbl, 'general')");
 
             foreach ($settings as $k => $v) {
-                $updateStmt->execute(['k' => $k, 'v' => trim($v)]);
+                $val = trim((string)$v);
+                $checkStmt->execute([':k' => $k]);
+                if ($checkStmt->fetch()) {
+                    $updateStmt->execute([':v' => $val, ':k' => $k]);
+                } else {
+                    $lbl = ucwords(str_replace('_', ' ', (string)$k));
+                    $insertStmt->execute([':k' => $k, ':v' => $val, ':lbl' => $lbl]);
+                }
             }
 
             setFlash('success', 'Site settings, branding & marketing copy updated successfully.');
@@ -68,6 +81,9 @@ try {
 
 $currentLogo = getSetting('site_logo', asset('images/logo.jpeg'));
 $currentFavicon = getSetting('site_favicon', asset('images/favicon.png'));
+
+$pageTitle = 'Site Settings & Branding';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div class="adm-card">

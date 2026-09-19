@@ -21,7 +21,8 @@ function getSetting(string $key, string $default = ''): string {
             // DB fallback
         }
     }
-    return $settingsCache[$key] ?? $default;
+    $val = $settingsCache[$key] ?? '';
+    return (trim((string)$val) !== '') ? (string)$val : $default;
 }
 
 /**
