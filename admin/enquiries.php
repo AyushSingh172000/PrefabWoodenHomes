@@ -118,7 +118,7 @@ try {
             </a>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;">
             <a href="<?= url('admin/enquiries.php?export=csv') ?>" class="adm-btn adm-btn--outline adm-btn--sm" title="Download all leads as spreadsheet">
                 <i class="fas fa-file-csv"></i> Export CSV
             </a>
@@ -126,9 +126,9 @@ try {
     </div>
 
     <!-- Search Bar -->
-    <form method="GET" action="" style="margin-bottom: 1.5rem; display: flex; gap: 0.75rem;">
+    <form method="GET" action="" style="margin-bottom: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
         <input type="hidden" name="status" value="<?= htmlspecialchars($filterStatus) ?>">
-        <input type="text" name="q" class="adm-input" placeholder="Search by name, email, phone, location or message keyword..." value="<?= htmlspecialchars($searchQuery) ?>" style="max-width: 500px;">
+        <input type="text" name="q" class="adm-input" placeholder="Search by name, email, phone, location or message keyword..." value="<?= htmlspecialchars($searchQuery) ?>" style="max-width: 500px; flex: 1 1 240px;">
         <button type="submit" class="adm-btn adm-btn--primary adm-btn--sm">
             <i class="fas fa-search"></i> Search
         </button>
@@ -146,12 +146,12 @@ try {
             <table class="adm-table">
                 <thead>
                     <tr>
-                        <th>Status</th>
-                        <th>Client Details</th>
-                        <th>Interest / Location</th>
-                        <th>Message Preview</th>
-                        <th>Received On</th>
-                        <th>Actions</th>
+                        <th style="min-width: 80px;">Status</th>
+                        <th style="min-width: 190px;">Client Details</th>
+                        <th style="min-width: 160px;">Interest / Location</th>
+                        <th style="min-width: 240px;">Message Preview</th>
+                        <th style="min-width: 120px;">Received On</th>
+                        <th style="min-width: 120px; text-align: right;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
