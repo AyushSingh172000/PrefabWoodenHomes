@@ -4,6 +4,27 @@
  */
 
 /**
+ * Get dynamic site setting from database with constant fallback
+ */
+function getSetting(string $key, string $default = ''): string {
+    static $settingsCache = null;
+    if ($settingsCache === null) {
+        $settingsCache = [];
+        try {
+            require_once __DIR__ . '/../config/database.php';
+            $db = Database::getConnection();
+            $stmt = $db->query("SELECT setting_key, setting_value FROM site_settings");
+            while ($row = $stmt->fetch()) {
+                $settingsCache[$row['setting_key']] = $row['setting_value'];
+            }
+        } catch (\Throwable $e) {
+            // DB fallback
+        }
+    }
+    return $settingsCache[$key] ?? $default;
+}
+
+/**
  * Return asset URL with dynamic base path
  */
 function asset(string $path): string {
