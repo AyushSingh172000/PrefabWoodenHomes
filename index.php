@@ -34,13 +34,13 @@ require_once __DIR__ . '/includes/header.php';
         <div class="container hero__content">
             <div class="hero__badge hero-entrance--1">
                 <i class="fas fa-award"></i>
-                15+ Years of Trusted Craftsmanship
+                <?= htmlspecialchars(getSetting('experience_years', '15')) ?>+ Years of Trusted Craftsmanship
             </div>
-            <h1 class="hero__title hero-entrance--2">Build Your Dream<br>Wooden Home</h1>
-            <p class="hero__subtitle hero-entrance--3">Custom-designed, premium wooden homes engineered for comfort, durability and timeless beauty. From concept to handover, we manage every detail.</p>
+            <h1 class="hero__title hero-entrance--2"><?= nl2br(htmlspecialchars(getSetting('hero_title', "Build Your Dream\nWooden Home"))) ?></h1>
+            <p class="hero__subtitle hero-entrance--3"><?= htmlspecialchars(getSetting('hero_subtitle', 'Custom-designed, premium wooden homes engineered for comfort, durability and timeless beauty. From concept to handover, we manage every detail.')) ?></p>
             <div class="hero__actions hero-entrance--4">
                 <a href="<?= url('pages/contact.php') ?>" class="btn btn--primary btn--lg btn-magnetic">Get a Free Quote</a>
-                <a href="https://wa.me/<?= CONTACT_WHATSAPP ?>?text=Hi%2C%20I%27m%20interested%20in%20a%20wooden%20home."
+                <a href="https://wa.me/<?= getSetting('contact_whatsapp', CONTACT_WHATSAPP) ?>?text=Hi%2C%20I%27m%20interested%20in%20a%20wooden%20home."
                    class="btn btn--whatsapp btn--lg btn-magnetic" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i> WhatsApp Us
                 </a>
@@ -51,7 +51,7 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="hero__stat-label">Projects Completed</div>
                 </div>
                 <div class="hero__stat">
-                    <div class="hero__stat-value" data-counter="15">15+</div>
+                    <div class="hero__stat-value" data-counter="<?= (int)getSetting('experience_years', '15') ?>"><?= (int)getSetting('experience_years', '15') ?>+</div>
                     <div class="hero__stat-label">Years Experience</div>
                 </div>
                 <div class="hero__stat">
@@ -71,43 +71,76 @@ require_once __DIR__ . '/includes/header.php';
                 <p class="section__subtitle">From cosy cottages to luxurious villas, we design and construct a wide range of wooden structures tailored to your vision.</p>
             </div>
 
+            <?php
+            $homeServices = getActiveServices();
+            $counts = ['all' => count($homeServices), 'cottage' => 0, 'farmhouse' => 0, 'villa' => 0, 'resort' => 0, 'treehouse' => 0];
+            foreach ($homeServices as $s) {
+                $sl = $s['slug'];
+                if (strpos($sl, 'farm') !== false) $counts['farmhouse']++;
+                elseif (strpos($sl, 'villa') !== false) $counts['villa']++;
+                elseif (strpos($sl, 'resort') !== false) $counts['resort']++;
+                elseif (strpos($sl, 'tree') !== false) $counts['treehouse']++;
+                else $counts['cottage']++;
+            }
+            ?>
+
             <!-- Filter / Sort Bar -->
             <div class="filter-bar reveal-up" data-filter-group="types">
                 <button class="filter-pill active" data-filter="all">
                     <span>All Structures</span>
-                    <span class="filter-pill__count">6</span>
+                    <span class="filter-pill__count"><?= $counts['all'] ?></span>
                 </button>
                 <button class="filter-pill" data-filter="cottage">
                     <span>Cottages &amp; Cabins</span>
-                    <span class="filter-pill__count">2</span>
+                    <span class="filter-pill__count"><?= $counts['cottage'] ?></span>
                 </button>
                 <button class="filter-pill" data-filter="farmhouse">
                     <span>Farmhouses</span>
-                    <span class="filter-pill__count">1</span>
+                    <span class="filter-pill__count"><?= $counts['farmhouse'] ?></span>
                 </button>
                 <button class="filter-pill" data-filter="villa">
                     <span>Luxury Villas</span>
-                    <span class="filter-pill__count">1</span>
+                    <span class="filter-pill__count"><?= $counts['villa'] ?></span>
                 </button>
                 <button class="filter-pill" data-filter="resort">
                     <span>Resort Stays</span>
-                    <span class="filter-pill__count">1</span>
+                    <span class="filter-pill__count"><?= $counts['resort'] ?></span>
                 </button>
                 <button class="filter-pill" data-filter="treehouse">
                     <span>Tree Houses</span>
-                    <span class="filter-pill__count">1</span>
+                    <span class="filter-pill__count"><?= $counts['treehouse'] ?></span>
                 </button>
             </div>
 
             <!-- Types Grid (Asymmetrical Bento with Breakout Panel) -->
             <div class="types-grid reveal-stagger" id="typesGrid">
-                <a href="<?= url('pages/construction.php#prefab-houses') ?>" class="type-card type-card--featured tilt-card" data-category="cottage">
-                    <span class="type-card__tag"><i class="fas fa-sparkles"></i> Signature Architectural</span>
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=900&q=80" alt="Prefab Wooden Houses" loading="lazy">
+                <?php
+                if (!empty($homeServices)):
+                    foreach ($homeServices as $hIdx => $hServ):
+                        $slug = $hServ['slug'];
+                        $cat = 'cottage';
+                        if (strpos($slug, 'farm') !== false) $cat = 'farmhouse';
+                        elseif (strpos($slug, 'villa') !== false) $cat = 'villa';
+                        elseif (strpos($slug, 'resort') !== false) $cat = 'resort';
+                        elseif (strpos($slug, 'tree') !== false) $cat = 'treehouse';
+
+                        $img = $hServ['image'] ?? '';
+                        if (empty($img)) {
+                            $img = 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=900&q=80';
+                        } elseif (!preg_match('#^https?://#i', $img)) {
+                            $img = asset($img);
+                        }
+
+                        $isFeatured = ($hIdx === 0);
+                        if ($isFeatured):
+                ?>
+                <a href="<?= url('pages/construction.php#' . htmlspecialchars($slug)) ?>" class="type-card type-card--featured tilt-card" data-category="<?= htmlspecialchars($cat) ?>">
+                    <span class="type-card__tag"><i class="fas fa-sparkles"></i> <?= htmlspecialchars($hServ['subtitle'] ?: 'Signature Architectural') ?></span>
+                    <img class="type-card__img" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($hServ['title']) ?>" loading="lazy">
                     <div class="type-card__overlay">
                         <div class="type-card__featured-badge">Turnkey Precision</div>
-                        <div class="type-card__title">Prefab Wooden Houses</div>
-                        <div class="type-card__desc">Factory-engineered Scandinavian &amp; Canadian pine components transported and seamlessly assembled on-site in 8–12 weeks.</div>
+                        <div class="type-card__title"><?= htmlspecialchars($hServ['title']) ?></div>
+                        <div class="type-card__desc"><?= htmlspecialchars(truncateText((string)$hServ['description'], 130)) ?></div>
                         <div class="type-card__specs">
                             <span><i class="fas fa-stopwatch"></i> 8–12 Wks Assembly</span>
                             <span><i class="fas fa-shield-alt"></i> 100% Termite Treated</span>
@@ -116,51 +149,16 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
                     <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
                 </a>
-
-                <a href="<?= url('pages/construction.php#cottages') ?>" class="type-card tilt-card" data-category="cottage">
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=600&q=75" alt="Wooden Cottages" loading="lazy">
+                <?php else: ?>
+                <a href="<?= url('pages/construction.php#' . htmlspecialchars($slug)) ?>" class="type-card tilt-card" data-category="<?= htmlspecialchars($cat) ?>">
+                    <img class="type-card__img" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($hServ['title']) ?>" loading="lazy">
                     <div class="type-card__overlay">
-                        <div class="type-card__title">Wooden Cottages</div>
-                        <div class="type-card__desc">Charming retreats for hill stations, farms, and weekend getaways.</div>
+                        <div class="type-card__title"><?= htmlspecialchars($hServ['title']) ?></div>
+                        <div class="type-card__desc"><?= htmlspecialchars(truncateText((string)$hServ['description'], 90)) ?></div>
                     </div>
                     <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
                 </a>
-
-                <a href="<?= url('pages/construction.php#farmhouses') ?>" class="type-card tilt-card" data-category="farmhouse">
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=75" alt="Wooden Farmhouses" loading="lazy">
-                    <div class="type-card__overlay">
-                        <div class="type-card__title">Wooden Farmhouses</div>
-                        <div class="type-card__desc">Expansive country living with wrap-around verandas &amp; open layouts.</div>
-                    </div>
-                    <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
-                </a>
-
-                <a href="<?= url('pages/construction.php#villas') ?>" class="type-card tilt-card" data-category="villa">
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=75" alt="Wooden Villas" loading="lazy">
-                    <div class="type-card__overlay">
-                        <div class="type-card__title">Wooden Villas</div>
-                        <div class="type-card__desc">Luxury multi-level timber residences with bespoke floor-to-ceiling glass.</div>
-                    </div>
-                    <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
-                </a>
-
-                <a href="<?= url('pages/construction.php#resort-cottages') ?>" class="type-card tilt-card" data-category="resort">
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&q=75" alt="Resort Cottages" loading="lazy">
-                    <div class="type-card__overlay">
-                        <div class="type-card__title">Resort Cottages</div>
-                        <div class="type-card__desc">Hospitality-grade wooden suites engineered for guest comfort &amp; high ROI.</div>
-                    </div>
-                    <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
-                </a>
-
-                <a href="<?= url('pages/construction.php#tree-houses') ?>" class="type-card tilt-card" data-category="treehouse">
-                    <img class="type-card__img" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=75" alt="Wooden Tree Houses" loading="lazy">
-                    <div class="type-card__overlay">
-                        <div class="type-card__title">Tree Houses</div>
-                        <div class="type-card__desc">Elevated woodland sanctuaries with safe structural tree integration.</div>
-                    </div>
-                    <div class="type-card__arrow"><i class="fas fa-arrow-right"></i></div>
-                </a>
+                <?php endif; endforeach; endif; ?>
             </div>
         </div>
     </section>

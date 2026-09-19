@@ -5,11 +5,11 @@
         <div class="container">
             <div class="footer__grid">
                 <div class="footer__brand">
-                    <a href="<?= url() ?>" class="footer__logo" aria-label="<?= SITE_NAME ?> Home">
-                        <img src="<?= asset('images/logo.jpeg') ?>" alt="<?= SITE_NAME ?> Logo" class="footer__logo-img" width="62" height="62" loading="lazy">
+                    <a href="<?= url() ?>" class="footer__logo" aria-label="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Home">
+                        <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="footer__logo-img" width="62" height="62" loading="lazy">
                         <span class="logo-text">
-                            <span class="logo-text__name footer__logo-name">Prefab Wooden Homes</span>
-                            <span class="logo-text__tagline footer__logo-tagline"><?= SITE_TAGLINE ?></span>
+                            <span class="logo-text__name footer__logo-name"><?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?></span>
+                            <span class="logo-text__tagline footer__logo-tagline"><?= htmlspecialchars(getSetting('site_tagline', SITE_TAGLINE)) ?></span>
                         </span>
                     </a>
                     <p class="footer__desc">Premium custom-designed wooden homes engineered for comfort, durability and timeless beauty. A venture of PWH India Venture LLP, trusted across India for 15+ years.</p>
@@ -38,13 +38,21 @@
                 <div class="footer__links">
                     <h4>Our Services</h4>
                     <ul>
-                        <li><a href="<?= url('pages/construction.php#prefab-houses') ?>">Prefab Wooden Houses</a></li>
-                        <li><a href="<?= url('pages/construction.php#cottages') ?>">Wooden Cottages</a></li>
-                        <li><a href="<?= url('pages/construction.php#farmhouses') ?>">Wooden Farmhouses</a></li>
-                        <li><a href="<?= url('pages/construction.php#villas') ?>">Wooden Villas</a></li>
-                        <li><a href="<?= url('pages/construction.php#resort-cottages') ?>">Resort Cottages</a></li>
-                        <li><a href="<?= url('pages/construction.php#tree-houses') ?>">Tree Houses</a></li>
-                        <li><a href="<?= url('pages/construction.php#stilt-houses') ?>">Wooden Stilt Houses</a></li>
+                        <?php
+                        $footerServices = getActiveServices();
+                        if (!empty($footerServices)):
+                            foreach (array_slice($footerServices, 0, 7) as $fServ): ?>
+                                <li><a href="<?= url('pages/construction.php#' . htmlspecialchars($fServ['slug'])) ?>"><?= htmlspecialchars($fServ['title']) ?></a></li>
+                            <?php endforeach;
+                        else: ?>
+                            <li><a href="<?= url('pages/construction.php#prefab-houses') ?>">Prefab Wooden Houses</a></li>
+                            <li><a href="<?= url('pages/construction.php#cottages') ?>">Wooden Cottages</a></li>
+                            <li><a href="<?= url('pages/construction.php#farmhouses') ?>">Wooden Farmhouses</a></li>
+                            <li><a href="<?= url('pages/construction.php#villas') ?>">Wooden Villas</a></li>
+                            <li><a href="<?= url('pages/construction.php#resort-cottages') ?>">Resort Cottages</a></li>
+                            <li><a href="<?= url('pages/construction.php#tree-houses') ?>">Tree Houses</a></li>
+                            <li><a href="<?= url('pages/construction.php#stilt-houses') ?>">Wooden Stilt Houses</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
 

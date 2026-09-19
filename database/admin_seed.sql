@@ -33,9 +33,9 @@ ON DUPLICATE KEY UPDATE `label` = VALUES(`label`);
 
 -- 2. Update Admin Password (username: admin, pass: Admin@123)
 INSERT INTO `admin_users` (`username`, `email`, `password_hash`, `role`, `is_active`)
-VALUES ('admin', 'aman@prefabwoodenhomes.com', '$2y$10$Q4Wwgnvre8zf8sAj.jxeZ.lxI4hZaviXwK/BNbQXp0yCLzF4s3uXu', 'admin', 1)
+VALUES ('admin', 'aman@prefabwoodenhomes.com', '$2y$10$P5XCVqgislW4dps7aUikvOLqvLRr6SC2yfUqLQChFprpmKWfT/ZWS', 'admin', 1)
 ON DUPLICATE KEY UPDATE 
-    `password_hash` = '$2y$10$Q4Wwgnvre8zf8sAj.jxeZ.lxI4hZaviXwK/BNbQXp0yCLzF4s3uXu',
+    `password_hash` = '$2y$10$P5XCVqgislW4dps7aUikvOLqvLRr6SC2yfUqLQChFprpmKWfT/ZWS',
     `is_active` = 1;
 
 -- 3. Seed Initial Projects if table is empty

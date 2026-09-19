@@ -123,3 +123,23 @@ function businessSchema(): string {
     ];
     return '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>';
 }
+
+/**
+ * Get all active services with in-memory caching
+ *
+ * @return array
+ */
+function getActiveServices(): array {
+    static $services = null;
+    if ($services !== null) {
+        return $services;
+    }
+    try {
+        $db = Database::getConnection();
+        $stmt = $db->query("SELECT * FROM services WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+        $services = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    } catch (\Throwable $e) {
+        $services = [];
+    }
+    return $services;
+}

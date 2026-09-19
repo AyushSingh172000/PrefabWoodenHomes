@@ -22,7 +22,7 @@ $user = currentAdmin();
 ?>
 <aside class="adm-sidebar" id="admSidebar">
     <div class="adm-brand">
-        <img src="<?= asset('images/logo.jpeg') ?>" alt="<?= SITE_NAME ?> Logo" class="adm-brand__logo">
+        <img src="<?= getSetting('site_logo', asset('images/logo.jpeg')) ?>" alt="<?= getSetting('site_name', SITE_NAME) ?> Logo" class="adm-brand__logo">
         <div class="adm-brand__text">
             Prefab Wooden
             <span>Admin Console</span>
@@ -57,6 +57,12 @@ $user = currentAdmin();
         </a>
 
         <div class="adm-nav__label">Content Management</div>
+        <a href="<?= url('admin/services.php') ?>" class="adm-nav__link <?= in_array($currentPage, ['services', 'service-edit']) ? 'active' : '' ?>">
+            <span class="adm-nav__link-content">
+                <i class="fas fa-hammer"></i> Services &amp; Types
+            </span>
+        </a>
+
         <a href="<?= url('admin/projects.php') ?>" class="adm-nav__link <?= in_array($currentPage, ['projects', 'project-edit']) ? 'active' : '' ?>">
             <span class="adm-nav__link-content">
                 <i class="fas fa-home"></i> Projects Portfolio

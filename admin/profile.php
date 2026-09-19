@@ -2,68 +2,82 @@
 /**
  * Admin Profile & Password Management
  */
-$pageTitle = 'My Profile';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
-$userId = $user['id'];
+$user = currentAdmin();
+$userId = (int)($user['id'] ?? 0);
 $error = '';
 
 try {
     $db = Database::getConnection();
-    $stmt = $db->prepare("SELECT * FROM admin_users WHERE id = :id LIMIT 1");
-    $stmt->execute(['id' => $userId]);
-    $currentUser = $stmt->fetch();
-} catch (\Throwable $e) {
-    $error = 'Database error: ' . $e->getMessage();
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    adminVerifyCsrf();
-    $action = $_POST['action'] ?? '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        adminVerifyCsrf();
+        $action = $_POST['action'] ?? '';
 
-    if ($action === 'update_profile') {
-        $email = trim($_POST['email'] ?? '');
-        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = 'Please enter a valid email address.';
-        } else {
-            try {
-                $stmt = $db->prepare("UPDATE admin_users SET email = :email WHERE id = :id");
-                $stmt->execute(['email' => $email, 'id' => $userId]);
-                $_SESSION['admin_user_email'] = $email;
-                setFlash('success', 'Profile updated successfully.');
-                header('Location: ' . url('admin/profile.php'));
-                exit;
-            } catch (\Throwable $e) {
-                $error = 'Could not update profile. Email may already be taken.';
+        if ($action === 'update_profile') {
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+
+            if (empty($username) || strlen($username) < 3 || !preg_match('/^[a-zA-Z0-9_.-]+$/', $username)) {
+                $error = 'Username must be at least 3 characters and contain only letters, numbers, hyphens, or underscores.';
+            } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = 'Please enter a valid email address.';
+            } else {
+                // Check uniqueness
+                $checkStmt = $db->prepare("SELECT id FROM admin_users WHERE (username = :u OR email = :e) AND id != :id LIMIT 1");
+                $checkStmt->execute(['u' => $username, 'e' => $email, 'id' => $userId]);
+                if ($checkStmt->fetch()) {
+                    $error = 'Username or email is already in use by another account.';
+                } else {
+                    $stmt = $db->prepare("UPDATE admin_users SET username = :u, email = :e WHERE id = :id");
+                    $stmt->execute(['u' => $username, 'e' => $email, 'id' => $userId]);
+                    $_SESSION['admin_user_name'] = $username;
+                    $_SESSION['admin_user_email'] = $email;
+                    setFlash('success', 'Profile and username updated successfully.');
+                    header('Location: ' . url('admin/profile.php'));
+                    exit;
+                }
             }
-        }
-    } elseif ($action === 'change_password') {
-        $currentPass = $_POST['current_password'] ?? '';
-        $newPass = $_POST['new_password'] ?? '';
-        $confirmPass = $_POST['confirm_password'] ?? '';
+        } elseif ($action === 'change_password') {
+            $currentPass = $_POST['current_password'] ?? '';
+            $newPass = $_POST['new_password'] ?? '';
+            $confirmPass = $_POST['confirm_password'] ?? '';
 
-        if (empty($currentPass) || empty($newPass)) {
-            $error = 'Please fill in all password fields.';
-        } elseif (!password_verify($currentPass, $currentUser['password_hash'])) {
-            $error = 'Current password is incorrect.';
-        } elseif (strlen($newPass) < 6) {
-            $error = 'New password must be at least 6 characters long.';
-        } elseif ($newPass !== $confirmPass) {
-            $error = 'New password and confirmation do not match.';
-        } else {
-            try {
+            $stmt = $db->prepare("SELECT password_hash FROM admin_users WHERE id = :id LIMIT 1");
+            $stmt->execute(['id' => $userId]);
+            $userRow = $stmt->fetch();
+
+            if (empty($currentPass) || empty($newPass)) {
+                $error = 'Please fill in all password fields.';
+            } elseif (!$userRow || !password_verify($currentPass, $userRow['password_hash'])) {
+                $error = 'Current password is incorrect.';
+            } elseif (strlen($newPass) < 6) {
+                $error = 'New password must be at least 6 characters long.';
+            } elseif ($newPass !== $confirmPass) {
+                $error = 'New password and confirmation do not match.';
+            } else {
                 $newHash = password_hash($newPass, PASSWORD_BCRYPT);
                 $stmt = $db->prepare("UPDATE admin_users SET password_hash = :hash WHERE id = :id");
                 $stmt->execute(['hash' => $newHash, 'id' => $userId]);
                 setFlash('success', 'Password changed successfully.');
                 header('Location: ' . url('admin/profile.php'));
                 exit;
-            } catch (\Throwable $e) {
-                $error = 'Failed to update password: ' . $e->getMessage();
             }
         }
     }
+
+    $stmt = $db->prepare("SELECT * FROM admin_users WHERE id = :id LIMIT 1");
+    $stmt->execute(['id' => $userId]);
+    $currentUser = $stmt->fetch();
+
+} catch (\Throwable $e) {
+    $error = 'Database error: ' . $e->getMessage();
 }
+
+$pageTitle = 'My Profile';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <?php if (!empty($error)): ?>
@@ -84,9 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="hidden" name="action" value="update_profile">
 
             <div class="adm-form-group">
-                <label class="adm-form-label">Username</label>
-                <input type="text" class="adm-input" value="<?= htmlspecialchars($currentUser['username'] ?? '') ?>" disabled style="opacity: 0.6; cursor: not-allowed;">
-                <small style="color: var(--adm-text-muted); font-size: 0.75rem;">Username cannot be changed.</small>
+                <label class="adm-form-label">Username <span class="req">*</span></label>
+                <input type="text" name="username" class="adm-input" value="<?= htmlspecialchars($currentUser['username'] ?? '') ?>" required placeholder="e.g. admin">
+                <small style="color: var(--adm-text-muted); font-size: 0.75rem;">Used to log into the admin dashboard.</small>
             </div>
 
             <div class="adm-form-group">

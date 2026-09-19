@@ -11,6 +11,9 @@ require_once __DIR__ . '/../../includes/functions.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+if (!ob_get_level()) {
+    ob_start();
+}
 
 /**
  * Check if current user is logged in
