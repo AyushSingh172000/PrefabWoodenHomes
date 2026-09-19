@@ -146,12 +146,12 @@ try {
             <table class="adm-table">
                 <thead>
                     <tr>
-                        <th style="min-width: 80px;">Status</th>
-                        <th style="min-width: 190px;">Client Details</th>
-                        <th style="min-width: 160px;">Interest / Location</th>
-                        <th style="min-width: 240px;">Message Preview</th>
-                        <th style="min-width: 120px;">Received On</th>
-                        <th style="min-width: 120px; text-align: right;">Actions</th>
+                        <th style="width: 75px;">Status</th>
+                        <th style="width: 22%;">Client Details</th>
+                        <th style="width: 18%;">Interest / Location</th>
+                        <th>Message Preview</th>
+                        <th style="width: 105px;">Received On</th>
+                        <th style="width: 110px; text-align: right;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -167,41 +167,41 @@ try {
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <strong><?= htmlspecialchars($e['name']) ?></strong>
-                                <div style="font-size: 0.78rem; color: var(--adm-text-muted);">
+                                <div style="font-weight: 600; color: var(--adm-text); line-height: 1.25;"><?= htmlspecialchars($e['name']) ?></div>
+                                <div style="font-size: 0.76rem; color: var(--adm-text-muted); word-break: break-all;">
                                     <a href="mailto:<?= htmlspecialchars($e['email']) ?>" style="color: var(--adm-gold);"><?= htmlspecialchars($e['email']) ?></a>
                                 </div>
                                 <?php if (!empty($e['phone'])): ?>
-                                    <div style="font-size: 0.78rem; color: var(--adm-text-muted);">
+                                    <div style="font-size: 0.76rem; color: var(--adm-text-muted);">
                                         <a href="tel:<?= htmlspecialchars(formatPhoneLink($e['phone'])) ?>"><?= htmlspecialchars($e['phone']) ?></a>
                                     </div>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <div style="font-weight: 600; text-transform: capitalize; font-size: 0.85rem; color: var(--adm-text);">
+                                <div style="font-weight: 600; text-transform: capitalize; font-size: 0.82rem; color: var(--adm-text); line-height: 1.25;">
                                     <?= htmlspecialchars($e['project_type'] ?: 'General Consultation') ?>
                                 </div>
-                                <div style="font-size: 0.75rem; color: var(--adm-text-muted);">
+                                <div style="font-size: 0.74rem; color: var(--adm-text-muted);">
                                     <i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($e['location'] ?: 'Not specified') ?>
                                 </div>
                             </td>
-                            <td style="max-width: 320px;">
-                                <div style="font-size: 0.82rem; color: var(--adm-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <td>
+                                <div style="font-size: 0.8rem; color: var(--adm-text-muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" title="<?= htmlspecialchars($e['message']) ?>">
                                     <?= htmlspecialchars($e['message']) ?>
                                 </div>
                                 <?php if (!empty($e['admin_notes'])): ?>
-                                    <div style="font-size: 0.72rem; color: var(--adm-gold); margin-top: 2px;">
-                                        <i class="fas fa-sticky-note"></i> Note: <?= htmlspecialchars(substr($e['admin_notes'], 0, 50)) ?>...
+                                    <div style="font-size: 0.72rem; color: var(--adm-gold); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        <i class="fas fa-sticky-note"></i> Note: <?= htmlspecialchars(substr($e['admin_notes'], 0, 45)) ?>...
                                     </div>
                                 <?php endif; ?>
                             </td>
-                            <td style="font-size: 0.78rem; color: var(--adm-text-muted); white-space: nowrap;">
-                                <?= date('M d, Y', strtotime($e['created_at'])) ?><br>
+                            <td style="font-size: 0.76rem; color: var(--adm-text-muted); white-space: nowrap;">
+                                <div style="font-weight: 600; color: var(--adm-text);"><?= date('M d, Y', strtotime($e['created_at'])) ?></div>
                                 <small><?= date('h:i A', strtotime($e['created_at'])) ?></small>
                             </td>
-                            <td style="white-space: nowrap;">
-                                <div style="display: flex; gap: 0.35rem; align-items: center;">
-                                    <a href="<?= url('admin/enquiry-view.php?id=' . $e['id']) ?>" class="adm-btn adm-btn--outline adm-btn--sm" title="View Full Details">
+                            <td style="white-space: nowrap; text-align: right;">
+                                <div style="display: inline-flex; gap: 0.3rem; align-items: center; justify-content: flex-end;">
+                                    <a href="<?= url('admin/enquiry-view.php?id=' . $e['id']) ?>" class="adm-btn adm-btn--outline adm-btn--sm" title="View Full Details" style="padding: 0.32rem 0.55rem; font-size: 0.75rem;">
                                         <i class="fas fa-eye"></i> View
                                     </a>
 
@@ -209,11 +209,11 @@ try {
                                         <?= adminCsrfField() ?>
                                         <input type="hidden" name="enquiry_id" value="<?= $e['id'] ?>">
                                         <?php if (!$e['is_read']): ?>
-                                            <button type="submit" name="action" value="mark_read" class="adm-btn adm-btn--outline adm-btn--sm" title="Mark as Read">
+                                            <button type="submit" name="action" value="mark_read" class="adm-btn adm-btn--outline adm-btn--sm" title="Mark as Read" style="padding: 0.32rem 0.45rem; font-size: 0.75rem;">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                         <?php endif; ?>
-                                        <button type="submit" name="action" value="delete" class="adm-btn adm-btn--danger adm-btn--sm adm-btn-delete" data-item="enquiry from <?= htmlspecialchars($e['name']) ?>" title="Delete Enquiry">
+                                        <button type="submit" name="action" value="delete" class="adm-btn adm-btn--danger adm-btn--sm adm-btn-delete" data-item="enquiry from <?= htmlspecialchars($e['name']) ?>" title="Delete Enquiry" style="padding: 0.32rem 0.45rem; font-size: 0.75rem;">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

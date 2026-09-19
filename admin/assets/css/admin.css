@@ -498,53 +498,30 @@ a {
 .adm-table-responsive {
     width: 100%;
     max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: var(--adm-radius-sm);
-    margin-bottom: 0.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(212, 175, 55, 0.35) var(--adm-surface-alt);
-}
-
-.adm-table-responsive::-webkit-scrollbar {
-    height: 6px;
-}
-
-.adm-table-responsive::-webkit-scrollbar-track {
-    background: var(--adm-surface-alt);
-    border-radius: 4px;
-}
-
-.adm-table-responsive::-webkit-scrollbar-thumb {
-    background: rgba(212, 175, 55, 0.35);
-    border-radius: 4px;
-}
-
-.adm-table-responsive::-webkit-scrollbar-thumb:hover {
-    background: var(--adm-gold);
+    overflow-x: visible;
 }
 
 .adm-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     text-align: left;
-    min-width: 820px;
 }
 
 .adm-table th {
-    padding: 0.85rem 1rem;
+    padding: 0.75rem 0.65rem;
     background: var(--adm-surface-alt);
     color: var(--adm-gold);
     font-weight: 600;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     border-bottom: 1px solid var(--adm-border);
+    white-space: nowrap;
 }
 
 .adm-table td {
-    padding: 1rem;
+    padding: 0.75rem 0.65rem;
     border-bottom: 1px solid rgba(212, 175, 55, 0.08);
     color: var(--adm-text);
     vertical-align: middle;
@@ -718,5 +695,12 @@ a {
     }
     .adm-body {
         padding: 1.25rem 1rem;
+    }
+    .adm-table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .adm-table {
+        min-width: 680px;
     }
 }
