@@ -60,7 +60,7 @@ $flash = getFlash();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Prefab Wooden Homes</title>
-    <link rel="icon" type="image/png" href="<?= asset('images/favicon.png') ?>">
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(getSetting('site_favicon', asset('images/favicon.png'))) ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -90,12 +90,17 @@ $flash = getFlash();
             margin-bottom: 2rem;
         }
         .adm-login-logo {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 1.5px solid var(--adm-gold);
+            height: 60px;
+            width: auto;
+            max-width: 160px;
+            border-radius: 12px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 14px rgba(212, 175, 55, 0.3));
             margin-bottom: 1rem;
-            object-fit: cover;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .adm-login-logo:hover {
+            transform: scale(1.05);
         }
         .adm-login-title {
             font-family: var(--font-serif);
@@ -126,7 +131,7 @@ $flash = getFlash();
 
 <div class="adm-login-card">
     <div class="adm-login-header">
-        <img src="<?= asset('images/logo.jpeg') ?>" alt="<?= SITE_NAME ?> Logo" class="adm-login-logo">
+        <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="adm-login-logo">
         <h2 class="adm-login-title">Prefab Wooden Homes</h2>
         <div class="adm-login-subtitle">Executive Admin Console</div>
     </div>

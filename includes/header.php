@@ -24,7 +24,7 @@ require_once __DIR__ . '/init.php';
     <header class="header" id="header">
         <div class="container header__inner">
             <a href="<?= url() ?>" class="header__logo" aria-label="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> - Home">
-                <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="header__logo-img" width="46" height="46">
+                <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="header__logo-img">
                 <span class="logo-text">
                     <span class="logo-text__name"><?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?></span>
                     <span class="logo-text__tagline"><?= htmlspecialchars(getSetting('site_tagline', SITE_TAGLINE)) ?></span>

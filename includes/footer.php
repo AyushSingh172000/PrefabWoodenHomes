@@ -6,7 +6,7 @@
             <div class="footer__grid">
                 <div class="footer__brand">
                     <a href="<?= url() ?>" class="footer__logo" aria-label="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Home">
-                        <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="footer__logo-img" width="62" height="62" loading="lazy">
+                        <img src="<?= htmlspecialchars(getSetting('site_logo', asset('images/logo.jpeg'))) ?>" alt="<?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?> Logo" class="footer__logo-img" loading="lazy">
                         <span class="logo-text">
                             <span class="logo-text__name footer__logo-name"><?= htmlspecialchars(getSetting('site_name', SITE_NAME)) ?></span>
                             <span class="logo-text__tagline footer__logo-tagline"><?= htmlspecialchars(getSetting('site_tagline', SITE_TAGLINE)) ?></span>

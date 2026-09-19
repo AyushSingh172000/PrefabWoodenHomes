@@ -117,7 +117,7 @@ require_once __DIR__ . '/includes/admin-header.php';
                 <div style="background: var(--adm-surface-alt); padding: 1.25rem; border-radius: var(--adm-radius); border: 1px solid var(--adm-border);">
                     <label class="adm-form-label"><i class="fas fa-image"></i> Website Header &amp; Footer Logo</label>
                     <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem;">
-                        <img src="<?= htmlspecialchars($currentLogo) ?>" alt="Current Logo" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid var(--adm-gold); box-shadow: 0 0 15px var(--adm-gold-glow);">
+                        <img src="<?= htmlspecialchars($currentLogo) ?>" alt="Current Logo" style="height: 58px; width: auto; max-width: 140px; border-radius: 10px; object-fit: contain; border: 1.5px solid var(--adm-gold); background: rgba(0,0,0,0.35); padding: 4px; box-shadow: 0 0 15px var(--adm-gold-glow);">
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 600;">Current Logo Active</div>
                             <div style="font-size: 0.72rem; color: var(--adm-text-muted); word-break: break-all;"><?= htmlspecialchars($currentLogo) ?></div>
