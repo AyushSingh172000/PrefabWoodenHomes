@@ -39,7 +39,7 @@ define('CONTACT_ADDRESS', '206 Fauzi Chowk, Dera Village, Near Fatehpur, Chhatar
 // Social Media
 define('SOCIAL_FACEBOOK', 'https://www.facebook.com/prefabwoodenhomes/');
 define('SOCIAL_INSTAGRAM', 'https://www.instagram.com/prefabwoodenhomes/');
-define('SOCIAL_YOUTUBE', 'https://www.youtube.com/');
+define('SOCIAL_YOUTUBE', 'https://www.youtube.com/channel/UCFWuLZvWxsbdPaR2N35682w');
 define('SOCIAL_TWITTER', 'https://twitter.com/');
 
 // Security

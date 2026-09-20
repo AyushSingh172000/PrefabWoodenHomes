@@ -27,7 +27,7 @@ INSERT INTO `site_settings` (`setting_key`, `setting_value`, `setting_group`, `l
 ('office_hours', 'Mon – Sat: 9:30 AM – 7:00 PM', 'contact', 'Office Operating Hours'),
 ('social_facebook', 'https://www.facebook.com/prefabwoodenhomes/', 'social', 'Facebook URL'),
 ('social_instagram', 'https://www.instagram.com/prefabwoodenhomes/', 'social', 'Instagram URL'),
-('social_youtube', 'https://www.youtube.com/', 'social', 'YouTube URL'),
+('social_youtube', 'https://www.youtube.com/channel/UCFWuLZvWxsbdPaR2N35682w', 'social', 'YouTube URL'),
 ('social_twitter', 'https://twitter.com/', 'social', 'Twitter URL')
 ON DUPLICATE KEY UPDATE `label` = VALUES(`label`);
 

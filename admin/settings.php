@@ -265,10 +265,10 @@ require_once __DIR__ . '/includes/admin-header.php';
                     <input type="url" name="settings[social_youtube]" class="adm-input" value="<?= htmlspecialchars(getSetting('social_youtube', SOCIAL_YOUTUBE)) ?>">
                 </div>
 
-                <div class="adm-form-group">
+                <!-- <div class="adm-form-group">
                     <label class="adm-form-label"><i class="fab fa-twitter"></i> Twitter / X Profile URL</label>
                     <input type="url" name="settings[social_twitter]" class="adm-input" value="<?= htmlspecialchars(getSetting('social_twitter', SOCIAL_TWITTER)) ?>">
-                </div>
+                </div> -->
             </div>
         </div>
 

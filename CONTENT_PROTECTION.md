@@ -44,6 +44,14 @@ To guarantee genuine visitors and leads can seamlessly submit quotation requests
 
 ## Files Modified
 1. **[`assets/css/style.css`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/assets/css/style.css)**:
-   - Added `.copy-alert-toast`, `.copy-alert-toast.active`, and responsive mobile rules.
+   - Added `.copy-alert-toast`, `.copy-alert-toast.active`, and responsive mobile rules for the public website.
 2. **[`assets/js/main.js`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/assets/js/main.js)**:
    - Added `initContentProtection()` module handling event listeners for `contextmenu`, `copy`, `cut`, and `keydown`.
+3. **[`admin/assets/css/admin.css`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/admin/assets/css/admin.css)**:
+   - Added `.copy-alert-toast` and `.copy-alert-toast.active` styles for the Admin Console.
+4. **[`admin/assets/js/admin.js`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/admin/assets/js/admin.js)**:
+   - Added `initAdminProtection()` module guarding the Admin Console against right-click, inspection, devtools, and copying outside form fields.
+5. **[`admin/login.php`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/admin/login.php)**:
+   - Included `admin.js` to protect the admin login screen.
+6. **[`config/app.php`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/config/app.php)** & **[`database/admin_seed.sql`](file:///c:/xampp/htdocs/Prefab-Wooden-Homes/database/admin_seed.sql)**:
+   - Updated client YouTube channel URL (`https://www.youtube.com/channel/UCFWuLZvWxsbdPaR2N35682w`).
