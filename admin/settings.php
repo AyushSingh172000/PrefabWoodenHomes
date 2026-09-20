@@ -120,17 +120,16 @@ require_once __DIR__ . '/includes/admin-header.php';
                         <img src="<?= htmlspecialchars($currentLogo) ?>" alt="Current Logo" style="height: 58px; width: auto; max-width: 140px; border-radius: 10px; object-fit: contain; border: 1.5px solid var(--adm-gold); background: rgba(0,0,0,0.35); padding: 4px; box-shadow: 0 0 15px var(--adm-gold-glow);">
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 600;">Current Logo Active</div>
-                            <div style="font-size: 0.72rem; color: var(--adm-text-muted); word-break: break-all;"><?= htmlspecialchars($currentLogo) ?></div>
                         </div>
                     </div>
                     <div class="adm-form-group" style="margin-bottom: 0.75rem;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Upload New Logo (PNG, JPG, SVG, WebP)</label>
                         <input type="file" name="logo_file" class="adm-input" accept="image/*">
                     </div>
-                    <div class="adm-form-group" style="margin-bottom: 0;">
+                    <!-- <div class="adm-form-group" style="margin-bottom: 0;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Or Enter Logo URL / Path</label>
                         <input type="text" name="settings[site_logo]" class="adm-input" value="<?= htmlspecialchars($currentLogo) ?>" placeholder="/assets/images/logo.jpeg or https://...">
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Favicon -->
@@ -140,17 +139,16 @@ require_once __DIR__ . '/includes/admin-header.php';
                         <img src="<?= htmlspecialchars($currentFavicon) ?>" alt="Current Favicon" style="width: 42px; height: 42px; border-radius: 8px; object-fit: contain; border: 1.5px solid var(--adm-gold); background: #000; padding: 4px;">
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 600;">Current Browser Tab Icon</div>
-                            <div style="font-size: 0.72rem; color: var(--adm-text-muted); word-break: break-all;"><?= htmlspecialchars($currentFavicon) ?></div>
                         </div>
                     </div>
                     <div class="adm-form-group" style="margin-bottom: 0.75rem;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Upload New Favicon (PNG, ICO, WebP)</label>
                         <input type="file" name="favicon_file" class="adm-input" accept="image/x-icon,image/png,image/webp">
                     </div>
-                    <div class="adm-form-group" style="margin-bottom: 0;">
+                    <!-- <div class="adm-form-group" style="margin-bottom: 0;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Or Enter Favicon URL / Path</label>
                         <input type="text" name="settings[site_favicon]" class="adm-input" value="<?= htmlspecialchars($currentFavicon) ?>" placeholder="/assets/images/favicon.png">
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
