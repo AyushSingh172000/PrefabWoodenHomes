@@ -51,14 +51,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Safe deletion confirmation
-    document.querySelectorAll('.adm-btn-delete').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const itemName = btn.getAttribute('data-item') || 'this item';
-            if (!confirm(`Are you sure you want to delete ${itemName}? This action cannot be undone.`)) {
-                e.preventDefault();
-            }
-        });
+    // ─── Custom Themed Deletion Confirmation Modal ───
+    let pendingForm = null;
+    let pendingButton = null;
+
+    function ensureDeleteModal() {
+        let modal = document.getElementById('admDeleteModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'admDeleteModal';
+            modal.className = 'adm-modal-backdrop';
+            modal.setAttribute('aria-hidden', 'true');
+            modal.innerHTML = `
+                <div class="adm-modal" role="dialog" aria-modal="true" aria-labelledby="admDeleteModalTitle">
+                    <div class="adm-modal__icon">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                    <div class="adm-modal__header">
+                        <h3 class="adm-modal__title" id="admDeleteModalTitle">Confirm Deletion</h3>
+                        <p class="adm-modal__message">
+                            Are you sure you want to delete <strong id="admDeleteItemName">this item</strong>? This action is permanent and cannot be undone.
+                        </p>
+                    </div>
+                    <div class="adm-modal__actions">
+                        <button type="button" class="adm-btn adm-btn--outline" id="admDeleteCancelBtn">
+                            Cancel
+                        </button>
+                        <button type="button" class="adm-btn adm-btn--danger" id="admDeleteConfirmBtn">
+                            <i class="fas fa-trash"></i> Delete Permanently
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeDeleteModal();
+            });
+
+            document.getElementById('admDeleteCancelBtn').addEventListener('click', closeDeleteModal);
+
+            document.getElementById('admDeleteConfirmBtn').addEventListener('click', () => {
+                if (pendingForm) {
+                    if (pendingButton && pendingButton.name) {
+                        let input = pendingForm.querySelector(`input[name="${pendingButton.name}"]`);
+                        if (!input) {
+                            input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = pendingButton.name;
+                            pendingForm.appendChild(input);
+                        }
+                        input.value = pendingButton.value || 'delete';
+                    }
+                    const formToSubmit = pendingForm;
+                    closeDeleteModal();
+                    formToSubmit.submit();
+                } else if (pendingButton && pendingButton.tagName === 'A' && pendingButton.href) {
+                    const href = pendingButton.href;
+                    closeDeleteModal();
+                    window.location.href = href;
+                } else {
+                    closeDeleteModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeDeleteModal();
+                }
+            });
+        }
+        return modal;
+    }
+
+    function openDeleteModal(itemName, form, btn) {
+        const modal = ensureDeleteModal();
+        const nameEl = document.getElementById('admDeleteItemName');
+        if (nameEl) {
+            nameEl.textContent = itemName || 'this item';
+        }
+        pendingForm = form;
+        pendingButton = btn;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('admDeleteModal');
+        if (modal) {
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+        document.body.style.overflow = '';
+        pendingForm = null;
+        pendingButton = null;
+    }
+
+    // Delegated click handler so dynamic rows or any .adm-btn-delete element is handled
+    document.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.adm-btn-delete');
+        if (!deleteBtn) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const itemName = deleteBtn.getAttribute('data-item') || 'this item';
+        const form = deleteBtn.closest('form');
+        openDeleteModal(itemName, form, deleteBtn);
     });
 
     // ─── Content & Source Code Protection (Admin Console) ───
