@@ -523,4 +523,115 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
     };
+
+    // ─── 15. Content & Source Code Protection (Copy & Inspect Guard) ───
+    function initContentProtection() {
+        let toastEl = null;
+        let toastTimeout = null;
+
+        function showCopyAlert() {
+            if (!toastEl) {
+                toastEl = document.createElement('div');
+                toastEl.id = 'copyAlertToast';
+                toastEl.className = 'copy-alert-toast';
+                toastEl.setAttribute('role', 'alert');
+                toastEl.setAttribute('aria-live', 'assertive');
+                toastEl.innerHTML = `
+                    <div class="copy-alert-toast__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.5L1.5 21H22.5L12 2.5Z" fill="#F4B400" stroke="#C98A00" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M12 8.5V14" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round"/>
+                            <circle cx="12" cy="17.5" r="1.3" fill="#1F2937"/>
+                        </svg>
+                    </div>
+                    <div class="copy-alert-toast__content">
+                        <div class="copy-alert-toast__text">
+                            <strong>ALERT:</strong> You are not allowed to copy content or view source
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(toastEl);
+            }
+
+            // Trigger animation
+            toastEl.classList.add('active');
+
+            if (toastTimeout) {
+                clearTimeout(toastTimeout);
+            }
+            toastTimeout = setTimeout(() => {
+                if (toastEl) {
+                    toastEl.classList.remove('active');
+                }
+            }, 3000);
+        }
+
+        // Helper to check if active element is a form control
+        function isInputActive(e) {
+            const target = e.target || document.activeElement;
+            if (!target) return false;
+            const tag = (target.tagName || '').toUpperCase();
+            return tag === 'INPUT' || tag === 'TEXTAREA' || target.isContentEditable;
+        }
+
+        // 1. Right Click (Context Menu) Prevention
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showCopyAlert();
+            return false;
+        });
+
+        // 2. Clipboard Copy & Cut Prevention (Allow within form inputs)
+        document.addEventListener('copy', (e) => {
+            if (isInputActive(e)) return;
+            e.preventDefault();
+            showCopyAlert();
+            return false;
+        });
+
+        document.addEventListener('cut', (e) => {
+            if (isInputActive(e)) return;
+            e.preventDefault();
+            showCopyAlert();
+            return false;
+        });
+
+        // 3. Developer Tools & View-Source Shortcut Interception
+        document.addEventListener('keydown', (e) => {
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+            const key = (e.key || '').toLowerCase();
+            const keyCode = e.keyCode || e.which;
+
+            // F12 key (DevTools)
+            if (key === 'f12' || keyCode === 123) {
+                e.preventDefault();
+                showCopyAlert();
+                return false;
+            }
+
+            if (isCtrlOrCmd) {
+                // Ctrl+U (View Source)
+                // Ctrl+S (Save Page)
+                // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (Inspect Element / Console / Picker)
+                if (key === 'u' || key === 's' || (e.shiftKey && (key === 'i' || key === 'j' || key === 'c'))) {
+                    e.preventDefault();
+                    showCopyAlert();
+                    return false;
+                }
+
+                // Ctrl+C / Ctrl+X outside text inputs
+                if (!isInputActive(e) && (key === 'c' || key === 'x')) {
+                    e.preventDefault();
+                    showCopyAlert();
+                    return false;
+                }
+            }
+        });
+
+        // Diagnostic hook for testing
+        window.__showCopyAlert = showCopyAlert;
+    }
+
+    initContentProtection();
 });
+
