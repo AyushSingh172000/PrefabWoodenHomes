@@ -2,13 +2,13 @@
 /**
  * Services & Construction Types Manager - Prefab Wooden Homes
  */
-$pageTitle = 'Services & Construction Types';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 try {
     $db = Database::getConnection();
 
-    // Handle quick status toggle
+    // Handle quick status toggle (Must process before any HTML output)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         adminVerifyCsrf();
         $action = $_POST['action'] ?? '';
@@ -28,6 +28,9 @@ try {
     echo '<div class="adm-alert adm-alert--error">Database error: ' . htmlspecialchars($e->getMessage()) . '</div>';
     $services = [];
 }
+
+$pageTitle = 'Services & Construction Types';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div class="adm-card">

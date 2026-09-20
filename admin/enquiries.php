@@ -2,13 +2,13 @@
 /**
  * Admin Enquiries & Lead Manager - Prefab Wooden Homes
  */
-$pageTitle = 'Enquiries & Leads';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 $filterStatus = $_GET['status'] ?? 'all';
 $searchQuery = trim($_GET['q'] ?? '');
 
-// Handle CSV Export
+// Handle CSV Export (Must execute before any HTML output)
 if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     try {
         $db = Database::getConnection();
@@ -33,7 +33,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     }
 }
 
-// Handle quick status changes or deletions via POST
+// Handle quick status changes or deletions via POST (Must process before any HTML output)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     adminVerifyCsrf();
     $action = $_POST['action'] ?? '';
@@ -62,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$pageTitle = 'Enquiries & Leads';
+require_once __DIR__ . '/includes/admin-header.php';
 
 // Fetch enquiries with filters
 try {

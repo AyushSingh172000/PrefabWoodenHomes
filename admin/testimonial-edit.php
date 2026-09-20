@@ -2,7 +2,8 @@
 /**
  * Add / Edit Testimonial - Prefab Wooden Homes
  */
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 $testimonialId = (int)($_GET['id'] ?? 0);
 $isEditing = $testimonialId > 0;
@@ -71,6 +72,8 @@ try {
 } catch (\Throwable $e) {
     $error = 'Database error: ' . $e->getMessage();
 }
+
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div style="margin-bottom: 1.5rem;">

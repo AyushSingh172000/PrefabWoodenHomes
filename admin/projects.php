@@ -2,13 +2,13 @@
 /**
  * Projects Portfolio Manager - Prefab Wooden Homes
  */
-$pageTitle = 'Projects Portfolio';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 try {
     $db = Database::getConnection();
 
-    // Toggle featured or active quickly
+    // Toggle featured or active quickly (Must process before any HTML output)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         adminVerifyCsrf();
         $action = $_POST['action'] ?? '';
@@ -34,6 +34,9 @@ try {
     echo '<div class="adm-alert adm-alert--error">Database error: ' . htmlspecialchars($e->getMessage()) . '</div>';
     $projects = [];
 }
+
+$pageTitle = 'Projects Portfolio';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div class="adm-card">

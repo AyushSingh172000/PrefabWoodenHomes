@@ -2,8 +2,8 @@
 /**
  * Single Enquiry Detail & Note Editor - Prefab Wooden Homes
  */
-$pageTitle = 'Enquiry Details';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 $enquiryId = (int)($_GET['id'] ?? 0);
 if ($enquiryId <= 0) {
@@ -18,7 +18,7 @@ try {
     $readStmt = $db->prepare("UPDATE enquiries SET is_read = 1 WHERE id = :id AND is_read = 0");
     $readStmt->execute(['id' => $enquiryId]);
 
-    // Handle updates
+    // Handle updates (Must process before any HTML output)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         adminVerifyCsrf();
         $action = $_POST['action'] ?? '';
@@ -55,9 +55,12 @@ try {
     }
 
 } catch (\Throwable $e) {
-    echo '<div class="adm-alert adm-alert--error">Database error: ' . htmlspecialchars($e->getMessage()) . '</div>';
     $enquiry = null;
+    setFlash('error', 'Database error: ' . $e->getMessage());
 }
+
+$pageTitle = 'Enquiry Details';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div style="margin-bottom: 1.5rem;">

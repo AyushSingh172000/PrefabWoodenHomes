@@ -2,10 +2,12 @@
 /**
  * Team Users Management - Prefab Wooden Homes
  */
-$pageTitle = 'Team Users';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 if (!isSuperAdmin()) {
+    $pageTitle = 'Access Denied';
+    require_once __DIR__ . '/includes/admin-header.php';
     echo '<div class="adm-alert adm-alert--error">Access denied. Superadmin privileges required.</div>';
     require_once __DIR__ . '/includes/admin-footer.php';
     exit;
@@ -68,6 +70,9 @@ try {
     $error = 'Database error: ' . $e->getMessage();
     $allUsers = [];
 }
+
+$pageTitle = 'Team Users';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <?php if (!empty($error)): ?>

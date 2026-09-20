@@ -2,13 +2,13 @@
 /**
  * Admin Site Visit Requests - Prefab Wooden Homes
  */
-$pageTitle = 'Site Visits';
-require_once __DIR__ . '/includes/admin-header.php';
+require_once __DIR__ . '/includes/auth.php';
+requireAdminLogin();
 
 try {
     $db = Database::getConnection();
 
-    // Handle status update
+    // Handle status update (Must process before any HTML output)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         adminVerifyCsrf();
         $action = $_POST['action'] ?? '';
@@ -51,6 +51,9 @@ try {
     echo '<div class="adm-alert adm-alert--error">Database error: ' . htmlspecialchars($e->getMessage()) . '</div>';
     $visits = [];
 }
+
+$pageTitle = 'Site Visits';
+require_once __DIR__ . '/includes/admin-header.php';
 ?>
 
 <div class="adm-card">
