@@ -112,17 +112,19 @@ require_once __DIR__ . '/includes/admin-header.php';
                 <i class="fas fa-palette"></i> Brand Identity &amp; Logos
             </h3>
 
-            <div class="adm-form-grid" style="grid-template-columns: 1fr 1fr; align-items: start;">
+            <div class="adm-form-grid" style="grid-template-columns: 1fr 1fr; align-items: stretch;">
                 <!-- Website Logo -->
-                <div style="background: var(--adm-surface-alt); padding: 1.25rem; border-radius: var(--adm-radius); border: 1px solid var(--adm-border);">
+                <div style="background: var(--adm-surface-alt); padding: 1.25rem; border-radius: var(--adm-radius); border: 1px solid var(--adm-border); display: flex; flex-direction: column;">
                     <label class="adm-form-label"><i class="fas fa-image"></i> Website Header &amp; Footer Logo</label>
-                    <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem;">
-                        <img src="<?= htmlspecialchars($currentLogo) ?>" alt="Current Logo" style="height: 58px; width: auto; max-width: 140px; border-radius: 10px; object-fit: contain; border: 1.5px solid var(--adm-gold); background: rgba(0,0,0,0.35); padding: 4px; box-shadow: 0 0 15px var(--adm-gold-glow);">
+                    <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem; min-height: 64px;">
+                        <div style="width: 80px; height: 60px; border-radius: 10px; border: 1.5px solid var(--adm-gold); background: rgba(0,0,0,0.35); padding: 4px; box-shadow: 0 0 15px var(--adm-gold-glow); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <img src="<?= htmlspecialchars($currentLogo) ?>" alt="Current Logo" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        </div>
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 600;">Current Logo Active</div>
                         </div>
                     </div>
-                    <div class="adm-form-group" style="margin-bottom: 0.75rem;">
+                    <div class="adm-form-group" style="margin-bottom: 0; margin-top: auto;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Upload New Logo (PNG, JPG, SVG, WebP)</label>
                         <input type="file" name="logo_file" class="adm-input" accept="image/*">
                     </div>
@@ -133,15 +135,17 @@ require_once __DIR__ . '/includes/admin-header.php';
                 </div>
 
                 <!-- Favicon -->
-                <div style="background: var(--adm-surface-alt); padding: 1.25rem; border-radius: var(--adm-radius); border: 1px solid var(--adm-border);">
+                <div style="background: var(--adm-surface-alt); padding: 1.25rem; border-radius: var(--adm-radius); border: 1px solid var(--adm-border); display: flex; flex-direction: column;">
                     <label class="adm-form-label"><i class="fas fa-bookmark"></i> Browser Tab Favicon Icon</label>
-                    <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem;">
-                        <img src="<?= htmlspecialchars($currentFavicon) ?>" alt="Current Favicon" style="width: 42px; height: 42px; border-radius: 8px; object-fit: contain; border: 1.5px solid var(--adm-gold); background: #000; padding: 4px;">
+                    <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem; min-height: 64px;">
+                        <div style="width: 80px; height: 60px; border-radius: 10px; border: 1.5px solid var(--adm-gold); background: rgba(0,0,0,0.35); padding: 4px; box-shadow: 0 0 15px var(--adm-gold-glow); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <img src="<?= htmlspecialchars($currentFavicon) ?>" alt="Current Favicon" style="max-height: 48px; max-width: 48px; object-fit: contain;">
+                        </div>
                         <div>
                             <div style="font-size: 0.82rem; font-weight: 600;">Current Browser Tab Icon</div>
                         </div>
                     </div>
-                    <div class="adm-form-group" style="margin-bottom: 0.75rem;">
+                    <div class="adm-form-group" style="margin-bottom: 0; margin-top: auto;">
                         <label class="adm-form-label" style="font-size: 0.78rem;">Upload New Favicon (PNG, ICO, WebP)</label>
                         <input type="file" name="favicon_file" class="adm-input" accept="image/x-icon,image/png,image/webp">
                     </div>
